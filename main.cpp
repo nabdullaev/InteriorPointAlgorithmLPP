@@ -4,7 +4,7 @@
 #include <cmath>
 
 using namespace std;
-const double eps = 1e-9;
+const double eps = 1e-5;
 
 class Matrix {
 public:
@@ -93,9 +93,9 @@ public:
         return *C;
     }
 
-    double norm() {
+    double norm(int a) {
         double sum = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < a; i++) {
             double temp = 0;
             for (int j = 0; j < m; j++) {
                 temp += matrix[i][j] * matrix[i][j];
@@ -180,11 +180,26 @@ Matrix projection(Matrix A_hat, int m) {
     return P;
 }
 
+//check if the solution is out of original bounds
+bool out_of_boundaries(Matrix& x, Matrix& A, Matrix& b){
+    int n = A.n;
+    int m = A.m-n;
+    for(int i = 0; i < n; ++i){
+        double left_hand_side = 0;
+        for(int j = 0; j < m; ++j){
+            left_hand_side += x.matrix[j][0]*A.matrix[i][j];
+        }
+        if(left_hand_side > b.matrix[i][0]){
+            return true;
+        }
+    }
+    return false;
+}
 
 
 int main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
+    int max_iterations = 1000;
+    int iteration_count = 0;
     // This is the program for interior point method to solve linear programming problem
     // Create a matrix A and c and assign values to them
     cout << "Enter the number of rows and columns of matrix A (n x m): ";
@@ -198,25 +213,74 @@ int main() {
     cin >> c;
     // Create a diagonal matrix D which represents the initial feasible solution
     cout << "Enter the vector of right-hand side numbers b: ";
-    Matrix D(m, m);
-    for (int i = 0; i < m; i++)
-        cin >> D.matrix[i][i];
-
+    Matrix b(n, 1);
+    cin >> b;
+    vector<bool> need_superplus_variable(n, false);
+    for(int i = 0; i < n; ++i){
+        if(b.matrix[i][0] < 0){
+            b.matrix[i][0] *= -1;
+            for(int j=0; j < m; ++j){
+                A.matrix[i][j] *= -1;
+            }
+            need_superplus_variable[i] = true;
+        }
+    }
     // Read accuracy
     double accuracy;
     cout << "Enter the approximation accuracy: ";
     cin >> accuracy;
+    Matrix D(m+n, m+n);
+    cout << "Enter initial solution with " << n+m << " variables\n";
+    for(int i = 0; i < m+n; ++i){
+        cout << "x" << i+1 << ": ";
+        cin >> D.matrix[i][i];
 
-    Matrix x_prev(m, 1);
-    for (int i = 0; i < m; i++)
+    }
+    Matrix x_init(n+m, 1);
+    for(int i = 0; i < m+n; ++i){
+        x_init.matrix[i][0] = D.matrix[i][i];
+    }
+    if(out_of_boundaries(x_init, A, b)){
+        cout << "Method is not applicable\n";
+        return 0;
+    }
+
+
+    Matrix A_new(n, m+n);
+    for(int i = 0; i < n; ++i){
+        for(int j = 0; j < m; ++j){
+            A_new.matrix[i][j] = A.matrix[i][j];
+        }
+    }
+    for(int j = m; j < m+n; ++j){
+        A_new.matrix[j-m][j] = 1;
+    }
+
+    A = A_new;
+
+    Matrix c_new(m+n, 1);
+    for(int i = 0; i < m; ++i){
+        c_new.matrix[i][0] = c.matrix[i][0];
+    }
+    c = c_new;
+
+    Matrix x_prev(m+n, 1);
+    for (int i = 0; i < m+n; i++)
         x_prev.matrix[i][0] = 0;
-    while (true) {
+
+    while (iteration_count <= max_iterations) {
+        Matrix D_inverse(m+n, m+n);
+        for(int i = 0; i < n+m; ++i){
+            D_inverse.matrix[i][i] = 1/D.matrix[i][i];
+        }
+
         // Calculate A_hat = A * D
         Matrix A_hat = A * D;
         // Calculate c_hat = D * c
         Matrix c_hat = D * c;
         // Calculate P = I - A_hat^T * (A_hat * A_hat^T)^(-1) * A_hat
-        Matrix P = projection(A_hat, m);
+        Matrix P = projection(A_hat, m+n);
+
         // Calculate c_p = P * c_hat
         Matrix c_p = P * c_hat;
         // Find number v such that v = min(c_p[i]), for all c_p[i] < 0
@@ -235,14 +299,27 @@ int main() {
             D.matrix[i][i] = x.matrix[i][0];
 
         Matrix diff = x - x_prev;
-        if (diff.norm() < accuracy) {
+        if (diff.norm(n) < accuracy || out_of_boundaries(x, A, b)) {
             x_prev = x;
             break;
         }
 
         x_prev = x;
+        iteration_count++;
     }
-    cout << "The optimal solution is the vector x with the corresponding elements: " << endl;
-    cout << x_prev << endl;
+    if(iteration_count > max_iterations){
+        cout << "The problem does not have solution!\n";
+    } else {
+        cout << "The optimal solution is the vector x with the corresponding elements: " << endl;
+        double result = 0;
+        for(int i = 0; i < m; ++i){
+            if (abs(x_prev.matrix[i][0]) < eps)
+                cout << fixed << setprecision(5)  << 0.00<<'\n';
+            else
+                cout << fixed << setprecision(5)  << x_prev.matrix[i][0]<<'\n';
+            result+=c.matrix[i][0]*x_prev.matrix[i][0];
+        }
+        cout << "Objective function value is " << result;
+    }
     return 0;
 }
