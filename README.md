@@ -10,7 +10,6 @@
 1. Copy the main.cpp file content and paste in your programming invironment.
 2. Make sure to have a C++ compiler installed.
 3. Run
-    gcc main.c -o main
-    ./main
+    g++ main.cpp -o main and call using ./main
 
 
