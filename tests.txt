@@ -1,0 +1,122 @@
+1)
+
+Enter the number of rows and columns of matrix A (n x m): 2 3
+Enter the matrix A (matrix of coefficients of constraint function) (n x m):
+2 -1 1
+1 1 -2
+Enter the matrix c (vector of coefficients of the objective function):
+2 -1 1
+Enter the vector of right-hand side numbers b:
+2 -1
+Enter the approximation accuracy: 1e-6
+Enter initial solution with 5 variables
+x1: 1
+x2: 1
+x3: 1
+x4: 1
+x5: 1
+The optimal solution is the vector x with the corresponding elements: 
+1.18293
+0.92683
+1.06098
+Objective function value is 2.50000
+
+
+
+2)
+Enter the number of rows and columns of matrix A (n x m): 3 4
+Enter the matrix A (matrix of coefficients of constraint function) (n x m):
+1 2 -1 -1
+-1 1 1 -2
+2 0 1 1
+Enter the matrix c (vector of coefficients of the objective function):
+1 -1 2 -1
+Enter the vector of right-hand side numbers b:
+1 2 3
+Enter the approximation accuracy: 1e-6
+Enter initial solution with 7 variables
+x1: 1
+x2: 1
+x3: 1
+x4: 1
+x5: 1
+x6: 1
+x7: 1
+
+The optimal solution is the vector x with the corresponding elements: 
+1.36184
+0.53947
+1.17105
+0.50000
+Objective function value is 2.66447
+
+3)
+Enter the number of rows and columns of matrix A (n x m): 3 3
+Enter the matrix A (matrix of coefficients of constraint function) (n x m):
+1 -1 2
+2 0 -3
+-1 1 0
+Enter the matrix c (vector of coefficients of the objective function):
+1 -2 3
+Enter the vector of right-hand side numbers b:
+4 -1 2
+Enter the approximation accuracy: 1e-6
+Enter initial solution with 6 variables
+x1: 1
+x2: 1
+x3: 1
+x4: 1
+x5: 1
+x6: 1
+
+The optimal solution is the vector x with the corresponding elements: 
+1.05738
+0.74590
+1.09426
+Objective function value is 2.84836
+
+4)Enter the number of rows and columns of matrix A (n x m): 2 2
+Enter the matrix A (matrix of coefficients of constraint function) (n x m):
+-1 2
+1 1
+Enter the matrix c (vector of coefficients of the objective function):
+-1 1
+Enter the vector of right-hand side numbers b:
+1 3
+Enter the approximation accuracy: 1e-6
+Enter initial solution with 4 variables
+x1: 1
+x2: 1
+x3: 1
+x4: 1
+
+The optimal solution is the vector x with the corresponding elements: 
+0.72222
+1.11111
+Objective function value is 0.38889
+
+5)Enter the number of rows and columns of matrix A (n x m):3 3
+ Enter the matrix A (matrix of coefficients of constraint function) (n x m):
+18 15 12
+6 4 8
+5 3 3
+Enter the matrix c (vector of coefficients of objective function):9 10 16
+ Enter the vector of right-hand side numbers b:360 192 180
+ Enter the approximation accuracy:1e-6
+ Enter initial solution with 6 variables
+x1:1
+x2:1
+x3:1
+x4:315
+x5:174
+x6:169
+
+The optimal solution is the vector x with the corresponding elements:
+0.00000
+8.00000
+20.00000
+Objective function value is 400.00000
+
+
+
+
